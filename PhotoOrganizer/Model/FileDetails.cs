@@ -24,17 +24,15 @@ namespace PhotoOrganizer.Model
         public string DestinationPath { get => _destinationPath; }
         public string FileName { get => _fileName; }
         public string Device { get => _device; }
-
+        public DateTime CreateDate { get => _createDate; }
+        public int MonthOfCreate { get => _monthOfCreate;  }
+        public int YearOfCreate { get => _yearOfCreate; }
 
         public FileDetails(string filePath)
         {
             _fileInfo = new FileInfo(filePath);
             _sourcePath = filePath;
-            _fileName = Path.GetFileName(filePath);            
-            _monthOfCreate = _fileInfo.CreationTime.Month;
-            _yearOfCreate = _fileInfo.CreationTime.Year;
-            _device = GetDeviceInfo(filePath);
-            _destinationPath = Path.Combine(_yearOfCreate.ToString(), _monthOfCreate.ToString(), GetMonthName(_monthOfCreate), _device,  _fileName);
+            _fileName = Path.GetFileName(filePath);                       
         }
 
         private string GetMonthName(int month)
@@ -42,13 +40,19 @@ namespace PhotoOrganizer.Model
             return System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);
         }
 
-        private string GetDeviceInfo(string filePath)
+        private void SetPhotoInfo()
         {
-            ShellObject picture = ShellObject.FromParsingName(filePath);
+            ShellObject picture = ShellObject.FromParsingName(_sourcePath);
+            var createDate = picture.Properties.GetProperty(SystemProperties.System.Photo.DateTaken).ValueAsObject?.ToString() ?? _fileInfo.CreationTime.Date.ToString();
+            _createDate = DateTime.Parse(createDate);
+            _monthOfCreate = _fileInfo.CreationTime.Month;
+            _yearOfCreate = _fileInfo.CreationTime.Year;
+
             var camera = picture.Properties.GetProperty(SystemProperties.System.Photo.CameraManufacturer)?.ValueAsObject?.ToString();
             var cameraModel = picture.Properties.GetProperty(SystemProperties.System.Photo.CameraModel).ValueAsObject?.ToString();
-            var createDate = picture.Properties.GetProperty(SystemProperties.System.Photo.DateTaken).ValueAsObject?.ToString();
-            return $@"{camera}_{cameraModel}";
+            _device = $@"{camera}{((string.IsNullOrWhiteSpace(camera) || string.IsNullOrWhiteSpace(cameraModel)) ? string.Empty : "_")}{cameraModel}";
+
+            _destinationPath = Path.Combine(_yearOfCreate.ToString(), _monthOfCreate.ToString(), GetMonthName(_monthOfCreate), _device, _fileName);
         }
     }
 }

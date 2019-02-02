@@ -42,6 +42,7 @@
       <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -65,6 +66,10 @@
     <Compile Include="RelayCommand.cs" />
     <Compile Include="Services\FilesExportService.cs" />
     <Compile Include="Services\FilesPrivider.cs" />
+    <Compile Include="Settings\DefaultPathsSettingsSection.cs" />
+    <Compile Include="Settings\Settings.cs" />
+    <Compile Include="Settings\SettingsModel.cs" />
+    <Compile Include="Settings\SettingsService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
