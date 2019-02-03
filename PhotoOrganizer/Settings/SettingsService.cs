@@ -56,9 +56,10 @@ namespace PhotoOrganizer.Settings
 
             if(sourceFolder!=SourceFolder || destinationFolder!=DestinationFolder || !fileExist)
             {
-                using (var stream = new FileStream(_settingsFilePath, FileMode.OpenOrCreate))
+                using (var stream = new FileStream(_settingsFilePath, FileMode.Create))
                 {
                     XmlSerializer serializer = new XmlSerializer(typeof(Settings));
+                    
                     Settings settings = new Settings()
                     {
                         SourceFolder = sourceFolder,

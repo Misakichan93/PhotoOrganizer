@@ -21,7 +21,7 @@ namespace PhotoOrganizer.Model
         private DateTime _createDate;
         private int _monthOfCreate;
         private int _yearOfCreate;
-        private double _size;
+        private long _size;
         private string _extension;
         private FileInfo _fileInfo;
 
@@ -37,16 +37,17 @@ namespace PhotoOrganizer.Model
         public int MonthOfCreate { get => _monthOfCreate;  }
         public int YearOfCreate { get => _yearOfCreate; }
         public string Extension { get => _extension; }
-        public double Size { get => _size; }
+        public long Size { get => _size; }
         public bool CopyFile { get; set; } = true;
 
         public FileDetails(string filePath, string destinationPath)
         {
             _fileInfo = new FileInfo(filePath);
-            _sourcePath = Directory.GetDirectoryRoot(filePath);
+            _sourcePath = filePath;
             _fileName = Path.GetFileName(filePath);
             _destinationPathPrefix = destinationPath;
             _extension = Path.GetExtension(filePath).ToLower();
+            _size = _fileInfo.Length;
             SetPhotoInfo();
         }
 
@@ -58,13 +59,10 @@ namespace PhotoOrganizer.Model
         private void SetPhotoInfo()
         {
             ShellObject picture = ShellObject.FromParsingName(_sourcePath);
-            var createDate = picture.Properties.GetProperty(SystemProperties.System.Photo.DateTaken).ValueAsObject?.ToString() ?? _fileInfo.CreationTime.Date.ToString();
+            var createDate = picture.Properties.GetProperty(SystemProperties.System.DateCreated).ValueAsObject?.ToString() ?? _fileInfo.CreationTime.Date.ToString();
             _createDate = DateTime.Parse(createDate);
             _monthOfCreate = _createDate.Month;
-            _yearOfCreate = _createDate.Year;
-
-            var size = picture.Properties.GetProperty(SystemProperties.System.Size).ValueAsObject.ToString();
-            _size = double.Parse(size);
+            _yearOfCreate = _createDate.Year;            
 
             var camera = picture.Properties.GetProperty(SystemProperties.System.Photo.CameraManufacturer)?.ValueAsObject?.ToString().Replace(' ', '_'); 
             var cameraModel = picture.Properties.GetProperty(SystemProperties.System.Photo.CameraModel).ValueAsObject?.ToString().Replace(' ', '_');
