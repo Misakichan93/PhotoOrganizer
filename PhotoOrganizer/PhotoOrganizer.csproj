@@ -44,6 +44,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -63,7 +64,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Model\ImageFormat.cs" />
     <Compile Include="RelayCommand.cs" />
+    <Compile Include="Services\CopyService.cs" />
     <Compile Include="Services\FilesExportService.cs" />
     <Compile Include="Services\FilesPrivider.cs" />
     <Compile Include="Settings\DefaultPathsSettingsSection.cs" />
